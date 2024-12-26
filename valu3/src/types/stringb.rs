@@ -3,6 +3,8 @@
 //! This implementation offers a way to handle strings with additional features, such as converting
 //! the string to uppercase or lowercase, trimming, replacing, and concatenating. It also handles
 //! converting between different representations of strings, such as `CString`, `String`, and `Vec<u8>`.
+#[cfg(feature = "cstring")]
+use std::ffi::CString;
 use std::fmt::{Display, Formatter};
 use std::ops::Deref;
 
@@ -118,7 +120,7 @@ impl StringB {
     pub fn as_string(&self) -> String {
         self.value.to_str().unwrap().to_string()
     }
-    
+
     #[cfg(not(feature = "cstring"))]
     pub fn as_string(&self) -> String {
         self.value.clone()

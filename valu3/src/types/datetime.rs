@@ -123,7 +123,7 @@ impl From<&str> for DateTime {
 impl From<i64> for DateTime {
     fn from(value: i64) -> Self {
         DateTime::DateTime(ChDateTime::from_naive_utc_and_offset(
-            chrono::NaiveDateTime::from_timestamp_nanos(value).unwrap(),
+            chrono::DateTime::from_timestamp_nanos(value).naive_local(),
             Utc,
         ))
     }
@@ -214,12 +214,13 @@ impl DateTimeBehavior for DateTime {
     fn timestamp(&self) -> Option<i64> {
         match self {
             DateTime::DateTime(datetime) => Some(datetime.timestamp()),
-            DateTime::Date(date) => Some(date.and_hms_opt(0, 0, 0).unwrap().timestamp()),
+            DateTime::Date(date) => Some(date.and_hms_opt(0, 0, 0).unwrap().and_utc().timestamp()),
             DateTime::Time(time) => Some(
                 NaiveDate::from_ymd_opt(1970, 1, 1)
                     .unwrap()
                     .and_hms_opt(time.hour(), time.minute(), time.second())
                     .unwrap()
+                    .and_utc()
                     .timestamp(),
             ),
         }
@@ -370,7 +371,7 @@ mod tests {
 
         assert_eq!(
             dt_date.timestamp(),
-            Some(date.and_hms_opt(0, 0, 0).unwrap().timestamp())
+            Some(date.and_hms_opt(0, 0, 0).unwrap().and_utc().timestamp())
         );
         assert_eq!(dt_datetime.timestamp(), Some(datetime.unwrap().timestamp()));
     }
