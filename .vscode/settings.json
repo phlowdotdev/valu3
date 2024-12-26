@@ -2,5 +2,12 @@
     "rust-analyzer.linkedProjects": [
         "./valu3/Cargo.toml",
         "./valu3/Cargo.toml"
-    ]
+    ],
+    "workbench.colorCustomizations": {
+        "[Material Theme Darker High Contrast]": {},
+        "[Material Theme Darker]": {},
+        "activityBar.background": "#131E83",
+        "titleBar.activeBackground": "#1A29B7",
+        "titleBar.activeForeground": "#FBFBFE"
+    }
 }
