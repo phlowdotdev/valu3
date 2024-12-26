@@ -437,7 +437,7 @@ checksum = "22049a19f4a68748a168c0fc439f9516686aa045927ff767eca0a85101fb6e73"
 
 [[package]]
 name = "valu3"
-version = "0.6.3"
+version = "0.6.4"
 dependencies = [
  "bincode",
  "chrono",
@@ -452,7 +452,7 @@ dependencies = [
 
 [[package]]
 name = "valu3-derive"
-version = "0.6.3"
+version = "0.6.4"
 dependencies = [
  "proc-macro2",
  "quote",

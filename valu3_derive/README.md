@@ -3,13 +3,13 @@
 Welcome to **Valu3** - the ultimate, flexible, and powerful library for manipulating diverse data types in your Rust projects. Say goodbye to the complexity of handling numbers, strings, arrays, objects, and datetime values. Valu3 is here to make your life easier!
 
 
-[![crates.io](https://img.shields.io/crates/v/valu3?label=0.6.3)](https://crates.io/crates/valu3)
-[![Documentation](https://docs.rs/valu3/badge.svg?version=0.6.3)](https://docs.rs/valu3/0.6.3)
+[![crates.io](https://img.shields.io/crates/v/valu3?label=0.6.4)](https://crates.io/crates/valu3)
+[![Documentation](https://docs.rs/valu3/badge.svg?version=0.6.4)](https://docs.rs/valu3/0.6.4)
 ![MSRV](https://img.shields.io/badge/rustc-1.59+-ab6000.svg)
 ![MIT or Apache 2.0 licensed](https://img.shields.io/crates/l/actix-web.svg)
-[![Dependency Status](https://deps.rs/crate/valu3/0.6.3/status.svg)](https://deps.rs/crate/valu3/0.6.3)
-![Main test](https://github.com/cogup/valu3/actions/workflows/main-test.yml/badge.svg)
-[![codecov](https://codecov.io/gh/cogup/valu3/branch/master/graph/badge.svg)](https://codecov.io/gh/cogup/valu3)
+[![Dependency Status](https://deps.rs/crate/valu3/0.6.4/status.svg)](https://deps.rs/crate/valu3/0.6.4)
+![Main test](https://github.com/lowcarboncode/valu3/actions/workflows/main-test.yml/badge.svg)
+[![codecov](https://codecov.io/gh/lowcarboncode/valu3/branch/master/graph/badge.svg)](https://codecov.io/gh/lowcarboncode/valu3)
 ![downloads](https://img.shields.io/crates/d/valu3.svg)
 
 ## 🌟 Key Features
@@ -137,7 +137,7 @@ fn main(){
 ```
 
 ## Contributing
-If you find a bug or have a suggestion for a new feature, please open an issue on the [GitHub repository](https://github.com/cogup/valu3/issues).
+If you find a bug or have a suggestion for a new feature, please open an issue on the [GitHub repository](https://github.com/lowcarboncode/valu3/issues).
 
 If you would like to contribute to the project, please feel free to submit a pull request. Before submitting a pull request, please make sure that your code adheres to the project's style guidelines and passes all tests.
 
@@ -153,4 +153,4 @@ Join us in the ongoing journey to refine and expand Valu3! 🚀
 
 
 ## License
-This project is licensed under the Apache 2.0 or MIT License. See the [LICENSE-APACHE](https://github.com/cogup/valu3/blob/main/LICENSE-APACHE) or [LICENSE-MIT](https://github.com/cogup/valu3/blob/main/LICENSE-MIT) file for more information.
+This project is licensed under the Apache 2.0 or MIT License. See the [LICENSE-APACHE](https://github.com/lowcarboncode/valu3/blob/main/LICENSE-APACHE) or [LICENSE-MIT](https://github.com/lowcarboncode/valu3/blob/main/LICENSE-MIT) file for more information.
