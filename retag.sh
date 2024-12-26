@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# This script replaces the old tag with the new tag in the files listed in the files array.
+# Usage: ./retag.sh <new_tag>
+# Example: ./retag.sh 0.1.0
+
+# -h or --help: Show help message
+if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
+    echo "This script replaces the old tag with the new tag in the files listed in the files array."
+    echo "Usage: ./retag.sh <new_tag>"
+    echo "Example: ./retag.sh 0.1.0"
+    exit 0
+fi
+
 # Verifica se o arquivo VERSION.txt existe
 if [ ! -f "VERSION.txt" ]; then
     echo "Arquivo VERSION.txt não encontrado."

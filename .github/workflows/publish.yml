@@ -3,11 +3,11 @@ name: Tagging and Publish
 on:
   push:
     branches:
-      - main    
-    
+      - main
+
 permissions: write-all
 
-env: 
+env:
   CARGO_TERM_COLOR: always
   CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
@@ -45,8 +45,8 @@ jobs:
           git tag "$VERSION"
           git push origin "$VERSION"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}            
-  
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   valu3_derive_publish:
     needs: tag
     name: Valu3 Derive - latest
