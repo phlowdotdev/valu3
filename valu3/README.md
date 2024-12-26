@@ -3,11 +3,11 @@
 Welcome to **Valu3** - the ultimate, flexible, and powerful library for manipulating diverse data types in your Rust projects. Say goodbye to the complexity of handling numbers, strings, arrays, objects, and datetime values. Valu3 is here to make your life easier!
 
 
-[![crates.io](https://img.shields.io/crates/v/valu3?label=0.6.4)](https://crates.io/crates/valu3)
-[![Documentation](https://docs.rs/valu3/badge.svg?version=0.6.4)](https://docs.rs/valu3/0.6.4)
+[![crates.io](https://img.shields.io/crates/v/valu3?label=0.6.5)](https://crates.io/crates/valu3)
+[![Documentation](https://docs.rs/valu3/badge.svg?version=0.6.5)](https://docs.rs/valu3/0.6.5)
 ![MSRV](https://img.shields.io/badge/rustc-1.59+-ab6000.svg)
-![MIT or Apache 2.0 licensed](https://img.shields.io/crates/l/actix-web.svg)
-[![Dependency Status](https://deps.rs/crate/valu3/0.6.4/status.svg)](https://deps.rs/crate/valu3/0.6.4)
+![Apache 2.0 licensed](https://img.shields.io/crates/l/actix-web.svg)
+[![Dependency Status](https://deps.rs/crate/valu3/0.6.5/status.svg)](https://deps.rs/crate/valu3/0.6.5)
 ![Main test](https://github.com/lowcarboncode/valu3/actions/workflows/main-test.yml/badge.svg)
 [![codecov](https://codecov.io/gh/lowcarboncode/valu3/branch/master/graph/badge.svg)](https://codecov.io/gh/lowcarboncode/valu3)
 ![downloads](https://img.shields.io/crates/d/valu3.svg)
@@ -153,4 +153,4 @@ Join us in the ongoing journey to refine and expand Valu3! 🚀
 
 
 ## License
-This project is licensed under the Apache 2.0 or MIT License. See the [LICENSE-APACHE](https://github.com/lowcarboncode/valu3/blob/main/LICENSE-APACHE) or [LICENSE-MIT](https://github.com/lowcarboncode/valu3/blob/main/LICENSE-MIT) file for more information.
+This project is licensed under the Apache 2.0 License. See the [LICENSE](https://github.com/lowcarboncode/valu3/blob/main/LICENSE) file for more information.
