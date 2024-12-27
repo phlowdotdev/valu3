@@ -1,5 +1,5 @@
 //! # value
-//! The Value library provides a generic value type with a wide range of classic methods for numerical and string manipulation. It was initially written to be used with the Purp language, but it can be used as a standalone library for any Rust project. The library includes types for arrays, objects, numbers, strings, and datetime. It also provides methods for converting values to and from various data formats, such as JSON, YAML, and XML.
+//! The Value library provides a generic value type with a wide range of classic methods for numerical and string manipulation. The library includes types for arrays, objects, numbers, strings, and datetime. It also provides methods for converting values to and from various data formats, such as JSON, YAML, and XML.
 //!
 //! With the Value library, you can easily manipulate different types of data in your Rust projects. You can create, modify, and query objects and arrays, perform arithmetic and bitwise operations on numbers, and convert values to and from strings. The library is easy to use and provides a consistent API for manipulating values, regardless of their type.
 //!
@@ -24,16 +24,16 @@
 //! assert!(undefined_value, Value::Undefined);
 //! datetime_value.add_days(1);
 //! ```
-pub mod primitives;
+pub mod impls;
 pub mod prelude;
-pub mod traits;
+pub mod primitives;
 #[cfg(feature = "serde")]
 pub mod serde_value;
 pub mod to;
+pub mod to_value;
+pub mod traits;
 pub mod types;
 pub mod value;
-pub mod impls;
-pub mod to_value;
 
 #[cfg(feature = "parser")]
 #[macro_use]
