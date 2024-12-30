@@ -22,27 +22,16 @@ pub trait NumberBehavior {
     /// num.set_u8(42);
     /// ```
     fn set_u8(&mut self, value: u8);
-
     fn set_u16(&mut self, value: u16);
-
     fn set_u32(&mut self, value: u32);
-
     fn set_u64(&mut self, value: u64);
-
     fn set_u128(&mut self, value: u128);
-
     fn set_i8(&mut self, value: i8);
-
     fn set_i16(&mut self, value: i16);
-
     fn set_i32(&mut self, value: i32);
-
     fn set_i64(&mut self, value: i64);
-
     fn set_i128(&mut self, value: i128);
-
     fn set_f32(&mut self, value: f32);
-
     fn set_f64(&mut self, value: f64);
 
     /// Returns the `u8` value stored in the `Number` struct, if any.
@@ -59,27 +48,16 @@ pub trait NumberBehavior {
     /// assert_eq!(num.get_u8(), Some(42));
     /// ```
     fn get_u8(&self) -> Option<u8>;
-
     fn get_u16(&self) -> Option<u16>;
-
     fn get_u32(&self) -> Option<u32>;
-
     fn get_u64(&self) -> Option<u64>;
-
     fn get_u128(&self) -> Option<u128>;
-
     fn get_i8(&self) -> Option<i8>;
-
     fn get_i16(&self) -> Option<i16>;
-
     fn get_i32(&self) -> Option<i32>;
-
     fn get_i64(&self) -> Option<i64>;
-
     fn get_i128(&self) -> Option<i128>;
-
     fn get_f32(&self) -> Option<f32>;
-
     fn get_f64(&self) -> Option<f64>;
 
     /// Returns the `u8` value stored in the `Number` struct, without checking if it exists.
@@ -97,27 +75,16 @@ pub trait NumberBehavior {
     /// unsafe { assert_eq!(num.get_u8_unsafe(), 42) };
     /// ```
     fn get_u8_unsafe(&self) -> u8;
-
     fn get_u16_unsafe(&self) -> u16;
-
     fn get_u32_unsafe(&self) -> u32;
-
     fn get_u64_unsafe(&self) -> u64;
-
     fn get_u128_unsafe(&self) -> u128;
-
     fn get_i8_unsafe(&self) -> i8;
-
     fn get_i16_unsafe(&self) -> i16;
-
     fn get_i32_unsafe(&self) -> i32;
-
     fn get_i64_unsafe(&self) -> i64;
-
     fn get_i128_unsafe(&self) -> i128;
-
     fn get_f32_unsafe(&self) -> f32;
-
     fn get_f64_unsafe(&self) -> f64;
 
     /// Checks if the stored number is of type `i8`.
@@ -134,27 +101,16 @@ pub trait NumberBehavior {
     /// assert_eq!(num.is_i8(), true);
     /// ```
     fn is_i8(&self) -> bool;
-
     fn is_i16(&self) -> bool;
-
     fn is_i32(&self) -> bool;
-
     fn is_i64(&self) -> bool;
-
     fn is_i128(&self) -> bool;
-
     fn is_u8(&self) -> bool;
-
     fn is_u16(&self) -> bool;
-
     fn is_u32(&self) -> bool;
-
     fn is_u64(&self) -> bool;
-
     fn is_u128(&self) -> bool;
-
     fn is_f32(&self) -> bool;
-
     fn is_f64(&self) -> bool;
 
     /// Checks if the `Number` struct contains any value.
@@ -195,6 +151,23 @@ pub trait NumberBehavior {
     /// assert_eq!(num.number_type(), NumberType::U32);
     /// ```
     fn number_type(&self) -> NumberType;
+
+    /// Converts the `Number` struct to numeric types.
+    ///
+    /// # Returns
+    ///
+    /// An `Option` containing the converted numeric value if it exists, or `None` otherwise.
+    ///
+    /// # Examples
+    ///
+    /// ```no_run
+    /// let mut num = Number::default();
+    /// num.set_u32(42);
+    /// assert_eq!(num.to_i64(), Some(42));
+    /// ```
+    fn to_u64(&self) -> Option<u64>;
+    fn to_i64(&self) -> Option<i64>;
+    fn to_f64(&self) -> Option<f64>;
 }
 
 /// An enum representing different numeric types.
@@ -576,6 +549,120 @@ impl NumberBehavior for Number {
             NumberType::F64
         } else {
             NumberType::Unknown
+        }
+    }
+
+    fn to_f64(&self) -> Option<f64> {
+        if self.is_f64() {
+            Some(self.get_f64_unsafe())
+        } else if self.is_f32() {
+            Some(self.get_f32_unsafe() as f64)
+        } else if self.is_i128() {
+            Some(self.get_i128_unsafe() as f64)
+        } else if self.is_i64() {
+            Some(self.get_i64_unsafe() as f64)
+        } else if self.is_i32() {
+            Some(self.get_i32_unsafe() as f64)
+        } else if self.is_i16() {
+            Some(self.get_i16_unsafe() as f64)
+        } else if self.is_i8() {
+            Some(self.get_i8_unsafe() as f64)
+        } else if self.is_u128() {
+            Some(self.get_u128_unsafe() as f64)
+        } else if self.is_u64() {
+            Some(self.get_u64_unsafe() as f64)
+        } else if self.is_u32() {
+            Some(self.get_u32_unsafe() as f64)
+        } else if self.is_u16() {
+            Some(self.get_u16_unsafe() as f64)
+        } else if self.is_u8() {
+            Some(self.get_u8_unsafe() as f64)
+        } else {
+            None
+        }
+    }
+
+    fn to_i64(&self) -> Option<i64> {
+        if self.is_i128() {
+            if self.get_i128_unsafe() > i64::MAX as i128 {
+                return None;
+            }
+
+            Some(self.get_i128_unsafe() as i64)
+        } else if self.is_i64() {
+            Some(self.get_i64_unsafe() as i64)
+        } else if self.is_i32() {
+            Some(self.get_i32_unsafe() as i64)
+        } else if self.is_i16() {
+            Some(self.get_i16_unsafe() as i64)
+        } else if self.is_i8() {
+            Some(self.get_i8_unsafe() as i64)
+        } else if self.is_u128() {
+            if self.get_u128_unsafe() > i64::MAX as u128 {
+                return None;
+            }
+
+            Some(self.get_u128_unsafe() as i64)
+        } else if self.is_u64() {
+            Some(self.get_u64_unsafe() as i64)
+        } else if self.is_u32() {
+            Some(self.get_u32_unsafe() as i64)
+        } else if self.is_u16() {
+            Some(self.get_u16_unsafe() as i64)
+        } else if self.is_u8() {
+            Some(self.get_u8_unsafe() as i64)
+        } else {
+            None
+        }
+    }
+
+    fn to_u64(&self) -> Option<u64> {
+        if self.is_i128() {
+            if self.get_i128_unsafe() < 0 || self.get_i128_unsafe() > u64::MAX as i128 {
+                return None;
+            }
+
+            Some(self.get_i128_unsafe() as u64)
+        } else if self.is_i64() {
+            if self.get_i64_unsafe() < 0 {
+                return None;
+            }
+
+            Some(self.get_i64_unsafe() as u64)
+        } else if self.is_i32() {
+            if self.get_i32_unsafe() < 0 {
+                return None;
+            }
+
+            Some(self.get_i32_unsafe() as u64)
+        } else if self.is_i16() {
+            if self.get_i16_unsafe() < 0 {
+                return None;
+            }
+
+            Some(self.get_i16_unsafe() as u64)
+        } else if self.is_i8() {
+            if self.get_i8_unsafe() < 0 {
+                return None;
+            }
+
+            Some(self.get_i8_unsafe() as u64)
+        } else if self.is_u128() {
+            if self.get_u128_unsafe() > u64::MAX as u128 {
+                return None;
+            }
+
+            Some(self.get_u128_unsafe() as u64)
+        } else if self.is_u64() {
+            Some(self.get_u64_unsafe() as u64)
+        } else if self.is_u32() {
+            Some(self.get_u32_unsafe() as u64)
+        } else if self.is_u16() {
+            Some(self.get_u16_unsafe() as u64)
+        } else if self.is_u8() {
+            Some(self.get_u8_unsafe() as u64)
+        } else {
+            None
         }
     }
 }
@@ -1118,5 +1205,62 @@ mod tests {
     fn test_from_isize() {
         let number = Number::from(-42isize);
         assert_eq!(number.get_i8(), Some(-42));
+    }
+
+    #[test]
+    fn test_convert_number_to_f64() {
+        let mut number = Number::default();
+
+        number.clean().set_u8(42);
+        assert_eq!(number.to_f64(), Some(42.0f64));
+
+        number.clean().set_i32(-42);
+        assert_eq!(number.to_f64(), Some(-42.0f64));
+
+        number.clean().set_f32(3.14);
+        assert_eq!(number.to_f64(), Some(3.140000104904175f64)); // Floating-point precision issue
+
+        number.clean().set_u128(123456789012345678901234567890);
+        assert_eq!(number.to_f64(), Some(123456789012345678901234567890.0));
+    }
+
+    #[test]
+    fn test_convert_number_to_i64() {
+        let mut number = Number::default();
+
+        number.clean().set_i32(-42);
+        assert_eq!(number.to_i64(), Some(-42));
+
+        number.clean().set_i128(-42);
+        assert_eq!(number.to_i64(), Some(-42));
+
+        number.clean().set_f32(3.14);
+        assert_eq!(number.to_i64(), None);
+
+        number.clean().set_u128(123456789012345678901234567890);
+        assert_eq!(number.to_i64(), None);
+
+        number.clean().set_i128(i128::MAX);
+        assert_eq!(number.to_i64(), None);
+    }
+
+    #[test]
+    fn test_convert_number_to_u64() {
+        let mut number = Number::default();
+
+        number.clean().set_u32(42);
+        assert_eq!(number.to_u64(), Some(42));
+
+        number.clean().set_u128(42);
+        assert_eq!(number.to_u64(), Some(42));
+
+        number.clean().set_f32(3.14);
+        assert_eq!(number.to_u64(), None);
+
+        number.clean().set_i128(-42);
+        assert_eq!(number.to_u64(), None);
+
+        number.clean().set_u128(u128::MAX);
+        assert_eq!(number.to_u64(), None);
     }
 }

@@ -623,6 +623,27 @@ impl NumberBehavior for Value {
             _ => NumberType::Unknown,
         }
     }
+
+    fn to_f64(&self) -> Option<f64> {
+        match self {
+            Value::Number(n) => n.to_f64(),
+            _ => None,
+        }
+    }
+
+    fn to_i64(&self) -> Option<i64> {
+        match self {
+            Value::Number(n) => n.to_i64(),
+            _ => None,
+        }
+    }
+
+    fn to_u64(&self) -> Option<u64> {
+        match self {
+            Value::Number(n) => n.to_u64(),
+            _ => None,
+        }
+    }
 }
 
 impl ObjectBehavior for Value {
