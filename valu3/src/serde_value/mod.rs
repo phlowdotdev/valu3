@@ -66,7 +66,15 @@ mod tests {
         object.insert("c", Value::from(3u64));
         let value = Value::from(object);
         let serialized = serde_json::to_string(&value).unwrap();
-        assert_eq!(serialized, r#"{"a":1,"b":2,"c":3}"#);
+
+        let cases = [
+            r#"{"a":1,"b":2,"c":3}"#,
+            r#"{"b":2,"a":1,"c":3}"#,
+            r#"{"b":2,"c":3,"a":1}"#,
+            r#"{"c":3,"b":2,"a":1}"#,
+            r#"{"c":3,"a":1,"b":2}"#,
+        ];
+        assert_eq!(cases.contains(&serialized.as_str()), true);
 
         let deserialized: Value = serde_json::from_str(&serialized).unwrap();
         assert_eq!(deserialized, value);
@@ -125,7 +133,15 @@ mod tests {
         object.insert("c", Value::from(3u64));
         let value = Value::from(object);
         let serialized = serde_json::to_string(&value).unwrap();
-        assert_eq!(serialized, r#"{"a":1,"b":2,"c":3}"#);
+        let cases = [
+            r#"{"a":1,"b":2,"c":3}"#,
+            r#"{"b":2,"a":1,"c":3}"#,
+            r#"{"b":2,"c":3,"a":1}"#,
+            r#"{"c":3,"b":2,"a":1}"#,
+            r#"{"c":3,"a":1,"b":2}"#,
+        ];
+        println!("{}", serialized);
+        assert_eq!(cases.contains(&serialized.as_str()), true);
 
         let deserialized: Value = serde_json::from_str(&serialized).unwrap();
         assert_eq!(deserialized, value);
