@@ -960,6 +960,9 @@ mod tests {
     fn test_value_number_behavior() {
         let value = Value::from(3.14);
         assert_eq!(value.get_f64_unsafe(), 3.14);
+
+        let value2 = Value::from(42u32);
+        assert_eq!(value2.to_u64(), Some(42));
     }
 
     #[test]

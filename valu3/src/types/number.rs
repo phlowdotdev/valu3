@@ -906,43 +906,43 @@ impl TryFrom<&str> for Number {
     type Error = Error;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        match value.parse::<i32>() {
-            Ok(value) => Ok(Self::from(value)),
-            Err(_) => match value.parse::<f64>() {
-                Ok(value) => Ok(Self::from(value)),
-                Err(_) => match value.parse::<i8>() {
-                    Ok(value) => Ok(Self::from(value)),
-                    Err(_) => match value.parse::<i16>() {
-                        Ok(value) => Ok(Self::from(value)),
-                        Err(_) => match value.parse::<i64>() {
-                            Ok(value) => Ok(Self::from(value)),
-                            Err(_) => match value.parse::<i128>() {
-                                Ok(value) => Ok(Self::from(value)),
-                                Err(_) => match value.parse::<u8>() {
-                                    Ok(value) => Ok(Self::from(value)),
-                                    Err(_) => match value.parse::<u16>() {
-                                        Ok(value) => Ok(Self::from(value)),
-                                        Err(_) => match value.parse::<u32>() {
-                                            Ok(value) => Ok(Self::from(value)),
-                                            Err(_) => match value.parse::<u64>() {
-                                                Ok(value) => Ok(Self::from(value)),
-                                                Err(_) => match value.parse::<u128>() {
-                                                    Ok(value) => Ok(Self::from(value)),
-                                                    Err(_) => match value.parse::<f32>() {
-                                                        Ok(value) => Ok(Self::from(value)),
-                                                        Err(_) => Err(Error::NotNumber),
-                                                    },
-                                                },
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            },
+        if let Ok(parsed) = value.parse::<i32>() {
+            return Ok(Self::from(parsed));
         }
+        if let Ok(parsed) = value.parse::<f64>() {
+            return Ok(Self::from(parsed));
+        }
+        if let Ok(parsed) = value.parse::<i8>() {
+            return Ok(Self::from(parsed));
+        }
+        if let Ok(parsed) = value.parse::<i16>() {
+            return Ok(Self::from(parsed));
+        }
+        if let Ok(parsed) = value.parse::<i64>() {
+            return Ok(Self::from(parsed));
+        }
+        if let Ok(parsed) = value.parse::<i128>() {
+            return Ok(Self::from(parsed));
+        }
+        if let Ok(parsed) = value.parse::<u8>() {
+            return Ok(Self::from(parsed));
+        }
+        if let Ok(parsed) = value.parse::<u16>() {
+            return Ok(Self::from(parsed));
+        }
+        if let Ok(parsed) = value.parse::<u32>() {
+            return Ok(Self::from(parsed));
+        }
+        if let Ok(parsed) = value.parse::<u64>() {
+            return Ok(Self::from(parsed));
+        }
+        if let Ok(parsed) = value.parse::<u128>() {
+            return Ok(Self::from(parsed));
+        }
+        if let Ok(parsed) = value.parse::<f32>() {
+            return Ok(Self::from(parsed));
+        }
+        Err(Error::NotNumber)
     }
 }
 
