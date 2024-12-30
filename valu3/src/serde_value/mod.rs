@@ -69,6 +69,7 @@ mod tests {
 
         let cases = [
             r#"{"a":1,"b":2,"c":3}"#,
+            r#"{"a":1,"c":3,"b":2}"#,
             r#"{"b":2,"a":1,"c":3}"#,
             r#"{"b":2,"c":3,"a":1}"#,
             r#"{"c":3,"b":2,"a":1}"#,
@@ -135,12 +136,12 @@ mod tests {
         let serialized = serde_json::to_string(&value).unwrap();
         let cases = [
             r#"{"a":1,"b":2,"c":3}"#,
+            r#"{"a":1,"c":3,"b":2}"#,
             r#"{"b":2,"a":1,"c":3}"#,
             r#"{"b":2,"c":3,"a":1}"#,
             r#"{"c":3,"b":2,"a":1}"#,
             r#"{"c":3,"a":1,"b":2}"#,
         ];
-        println!("{}", serialized);
         assert_eq!(cases.contains(&serialized.as_str()), true);
 
         let deserialized: Value = serde_json::from_str(&serialized).unwrap();
