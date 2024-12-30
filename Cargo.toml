@@ -1,6 +1,3 @@
 [workspace]
-members = [
-    "valu3",
-    "valu3_derive",
-]
+members = ["valu3", "valu3_derive", "pest-cli"]
 resolver = "2"

@@ -1,35 +1,37 @@
-yaml = { SOI ~ (document)* ~ EOI }
+yaml       = _{ SOI ~ key_value_pair* ~ EOI }
+BREAK_LINE = _{ "\n\r" | "\n" | "\r" }
 
+key_value_pair =  { key ~ ":" ~ value }
+key            = @{ (ASCII_ALPHANUMERIC | "_") ~ (ASCII_ALPHANUMERIC | "_" | "-")* }
+list_item      = _{ "-" ~ value }
+
+value      = _{ number | boolean | null | list | map | string }
 WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
 
-document = { (key_value_pair | list_item)+ }
-
-key_value_pair = { key ~ ":" ~ value }
-
-key = { char+ }
-
-value = _{ string | number | boolean | null | object | array | block_value }
-
-string = ${ "\"" ~ inner ~ "\"" }
-inner  = @{ char* }
-char   =  {
-    !("\"" | "\\") ~ ANY
-  | "\\" ~ ("\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
+string_single_quote = _{ "'" ~ ident ~ "'" }
+string_double_quote = _{ "\"" ~ ident ~ "\"" }
+string_unescaped    = _{ ident_unescaped ~ BREAK_LINE? }
+string              =  { string_single_quote | string_double_quote | string_unescaped }
+ident               = @{ char* }
+char                =  {
+    !("\"" | "'" | "\\") ~ ANY
+  | "\\" ~ ("\"" | "'" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
   | "\\" ~ ("u" ~ ASCII_HEX_DIGIT{4})
 }
+ident_unescaped     = @{ char_unescaped* }
+char_unescaped      =  { !("\n" | "\r") ~ ANY }
 
-number = @{ ("-"? ~ ("0" | ASCII_NONZERO_DIGIT ~ ASCII_DIGIT*) ~ ("." ~ ASCII_DIGIT*)? ~ ("e" ~ ("+" | "-")? ~ ASCII_DIGIT+)?) }
+null      =  { "null" }
+undefined =  { "undefined" }
+boolean   =  { "true" | "false" }
+number    = @{
+    "-"? ~ ("0" | ASCII_NONZERO_DIGIT ~ ASCII_DIGIT*) ~ ("." ~ ASCII_DIGIT*)? ~ (^"e" ~ ("+" | "-")? ~ ASCII_DIGIT+)?
+}
+list      =  { "[" ~ (value ~ ("," ~ value)*)? ~ "]" }
 
-boolean = { "true" | "false" }
-
-null = { "null" }
-
-object = { "{" ~ (key_value_pair ~ ("," ~ key_value_pair)*)? ~ "}" }
-
-array = { "[" ~ (value ~ ("," ~ value)*)? ~ "]" }
-
-list_item = { "-" ~ " " ~ value }
-
-block_value = { indent_block ~ value }
-
-indent_block = { "  "+ }
+// map
+map                = { "{" ~ (key_value_pair_map ~ ("," ~ key_value_pair_map)*)? ~ "}" }
+key_value_pair_map = { map_key ~ ":" ~ map_value }
+map_key            = { string_double_quote }
+map_value          = { number | boolean | null | map_list | map | string_double_quote | undefined }
+map_list           = { "[" ~ (map_value ~ ("," ~ map_value)*)? ~ "]" }

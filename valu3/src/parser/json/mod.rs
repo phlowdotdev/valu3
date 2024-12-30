@@ -53,7 +53,7 @@ impl Value {
             Rule::null => Self::Null,
             Rule::json
             | Rule::EOI
-            | Rule::pair
+            | Rule::key_value_pair
             | Rule::value
             | Rule::inner
             | Rule::char
