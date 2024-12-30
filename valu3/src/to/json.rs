@@ -132,9 +132,9 @@ mod tests {
 
     #[test]
     fn it_should_convert_a_value_to_json_string() {
-        let value_str = Value::payload_to_value("{\"name\":\"John Doe\"}").unwrap();
-        let value_number = Value::payload_to_value("{\"age\":30}").unwrap();
-        let value_boolean = Value::payload_to_value("{\"is_active\":true}").unwrap();
+        let value_str = Value::json_to_value("{\"name\":\"John Doe\"}").unwrap();
+        let value_number = Value::json_to_value("{\"age\":30}").unwrap();
+        let value_boolean = Value::json_to_value("{\"is_active\":true}").unwrap();
         assert_eq!(
             "{\n\t\"name\": \"John Doe\"\n}",
             value_str.to_json(JsonMode::Indented)
