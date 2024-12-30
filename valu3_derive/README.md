@@ -3,11 +3,11 @@
 Welcome to **Valu3** - the ultimate, flexible, and powerful library for manipulating diverse data types in your Rust projects. Say goodbye to the complexity of handling numbers, strings, arrays, objects, and datetime values. Valu3 is here to make your life easier!
 
 
-[![crates.io](https://img.shields.io/crates/v/valu3?label=0.7.1)](https://crates.io/crates/valu3)
-[![Documentation](https://docs.rs/valu3/badge.svg?version=0.7.1)](https://docs.rs/valu3/0.7.1)
+[![crates.io](https://img.shields.io/crates/v/valu3?label=0.7.2)](https://crates.io/crates/valu3)
+[![Documentation](https://docs.rs/valu3/badge.svg?version=0.7.2)](https://docs.rs/valu3/0.7.2)
 ![MSRV](https://img.shields.io/badge/rustc-1.59+-ab6000.svg)
 ![Apache 2.0 licensed](https://img.shields.io/crates/l/actix-web.svg)
-[![Dependency Status](https://deps.rs/crate/valu3/0.7.1/status.svg)](https://deps.rs/crate/valu3/0.7.1)
+[![Dependency Status](https://deps.rs/crate/valu3/0.7.2/status.svg)](https://deps.rs/crate/valu3/0.7.2)
 ![Main test](https://github.com/lowcarboncode/valu3/actions/workflows/main-test.yml/badge.svg)
 [![codecov](https://codecov.io/gh/lowcarboncode/valu3/branch/master/graph/badge.svg)](https://codecov.io/gh/lowcarboncode/valu3)
 ![downloads](https://img.shields.io/crates/d/valu3.svg)
