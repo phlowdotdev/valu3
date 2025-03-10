@@ -1,6 +1,6 @@
 [package]
 name = "valu3"
-version = "0.8.0"
+version = "0.8.1"
 edition = "2021"
 license = "Apache-2.0"
 readme = "crates-io.md"
@@ -17,7 +17,7 @@ pest_derive = "2.7.15"
 regex = "1.11.1"
 chrono = "0.4.39"
 serde = { version = "1.0.216", features = ["derive"], optional = true }
-valu3-derive = { path = "../valu3_derive", optional = true, version = "0.8.0" }
+valu3-derive = { path = "../valu3_derive", optional = true, version = "0.8.1" }
 bincode = { version = "1.3.3", optional = true }
 
 [dev-dependencies]

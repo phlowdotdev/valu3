@@ -41,7 +41,7 @@ impl ValueTrait for Value {}
 impl Display for Value {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Value::String(_) => write!(f, "{}", self.to_json(JsonMode::Indented)),
+            Value::String(_) => write!(f, "{}", self.to_string()),
             Value::Number(value) => write!(f, "{}", value),
             Value::Boolean(value) => write!(f, "{}", if *value { "true" } else { "false" }),
             Value::Array(_) => write!(f, "{}", self.to_json(JsonMode::Indented)),
@@ -133,5 +133,4 @@ mod tests {
         assert_eq!(value1 >= value2, false);
         assert_eq!(value2 <= value1, false);
     }
-    
 }
