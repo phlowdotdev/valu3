@@ -25,6 +25,7 @@
 //! datetime_value.add_days(1);
 //! ```
 pub mod impls;
+pub mod macros;
 pub mod prelude;
 pub mod primitives;
 #[cfg(feature = "serde")]
