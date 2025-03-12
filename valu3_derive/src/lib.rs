@@ -188,7 +188,7 @@ pub fn from_value_derive(input: TokenStream) -> TokenStream {
                             Value::String(value) => {
                                 match value.as_str() {
                                     #(
-                                        stringify!(#variant_names) => Some(#target_name::#variant_names),
+                                        v if v == stringify!(#variant_names) => Some(#target_name::#variant_names),
                                     )*
                                     _ => None,
                                 }
