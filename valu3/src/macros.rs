@@ -37,12 +37,13 @@ mod test {
 
     #[test]
     fn test_json() {
+        let test5 = true;
         let json = json!({
             "test": true,
             "test2": "ok",
             "test3": [0, 1],
             "test4": {
-                "test5": true,
+                "test5": test5,
                 "test6": "ok",
                 "test7": [0, 1]
             }
