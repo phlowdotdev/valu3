@@ -1,9 +1,9 @@
 extern crate proc_macro;
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, Data, DeriveInput, Fields, Generics, Variant};
+use syn::{parse_macro_input, Data, DeriveInput, Fields, Generics, Meta, Variant};
 
-#[proc_macro_derive(ToValue)]
+#[proc_macro_derive(ToValue, attributes(attr))]
 pub fn to_value_derive(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
 
@@ -221,4 +221,23 @@ pub fn to_json_derive(input: TokenStream) -> TokenStream {
     };
 
     gen.into()
+}
+
+#[proc_macro_derive(ToYaml)]
+pub fn to_yaml_derive(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    let name = input.ident;
+    let generics = input.generics;
+    let (impl_generics, ty_generics, where_clause) = generics.split_for_impl();
+
+    let expanded = quote! {
+        impl #impl_generics ToYamlBehavior for #name  #ty_generics #where_clause {
+            fn to_yaml(&self) -> String {
+                let value = self.to_value();
+                value.to_yaml()
+            }
+        }
+    };
+
+    TokenStream::from(expanded)
 }
