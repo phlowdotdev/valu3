@@ -7,9 +7,10 @@ use valu3_derive::*;
 struct User {
     id: u32,
     name: String,
+    status: Status,
 }
 
-#[derive(ToValue, FromValue, ToJson)]
+#[derive(Clone, ToValue, FromValue, ToJson, PartialEq, Debug)]
 enum Status {
     Active,
     Inactive,
@@ -20,12 +21,14 @@ fn test_to_value_struct() {
     let user = User {
         id: 1,
         name: "Alice".to_string(),
+        status: Status::Active,
     };
     let value = user.to_value();
 
     if let Value::Object(map) = value {
         assert_eq!(map.get("id").unwrap(), &Value::from(1u32));
         assert_eq!(map.get("name").unwrap(), &Value::from("Alice"));
+        assert_eq!(map.get("status").unwrap(), &Value::from("Active"));
     } else {
         panic!("Expected Value::Object");
     }
@@ -34,52 +37,53 @@ fn test_to_value_struct() {
 #[test]
 fn test_from_value_struct() {
     let mut map = HashMap::new();
-    map.insert("id".to_string(), Value::from(1));
+    map.insert("id".to_string(), Value::from(1u32));
     map.insert("name".to_string(), Value::from("Alice"));
+    map.insert("status".to_string(), Value::from("Active"));
+    let value = map.to_value();
 
-    let user = User::from_value(map.to_value()).expect("Should parse correctly");
+    let user = User::from_value(value).expect("Should parse correctly");
 
     assert_eq!(user.id, 1);
     assert_eq!(user.name, "Alice".to_string());
+    assert_eq!(user.status, Status::Active);
 }
 
-// #[test]
-// fn test_to_value_enum() {
-//     let status = Status::Active;
-//     let value = status.to_value();
+#[test]
+fn test_to_value_enum() {
+    let status = Status::Active;
+    let value = status.to_value();
 
-//     assert_eq!(value, Value::from("Active"));
-// }
+    assert_eq!(value, Value::from("Active"));
+}
 
-// #[test]
-// fn test_from_value_enum() {
-//     let value = Value::from("Active");
-//     let status = Status::from_value(value).expect("Should parse correctly");
+#[test]
+fn test_from_value_enum() {
+    let value = Value::from("Active");
+    let status = Status::from_value(value).expect("Should parse correctly");
 
-//     match status {
-//         Status::Active => (),
-//         _ => panic!("Expected Status::Active"),
-//     }
-// }
+    match status {
+        Status::Active => (),
+        _ => panic!("Expected Status::Active"),
+    }
+}
 
-// #[test]
-// fn test_to_json() {
-//     let user = User {
-//         id: 1,
-//         name: "Alice".to_string(),
-//     };
-//     let json = user.to_json();
-//     assert_eq!(json, r#"{"id":1,"name":"Alice"}"#);
-// }
+#[test]
+fn test_to_json() {
+    let user = User {
+        id: 1,
+        name: "Alice".to_string(),
+        status: Status::Active,
+    };
+    let json = user.to_json();
+    let expect = {
+        let mut map = HashMap::new();
+        map.insert("id".to_string(), Value::from(1));
+        map.insert("name".to_string(), Value::from("Alice"));
+        map.insert("status".to_string(), Value::from("Active"));
+        map.to_value()
+    };
+    let result = Value::json_to_value(&json).unwrap();
 
-// #[test]
-// fn test_to_yaml() {
-//     let user = User {
-//         id: 1,
-//         name: "Alice".to_string(),
-//     };
-//     let yaml = user.to_yaml();
-
-//     let expected_yaml = "---\nid: 1\nname: Alice\n";
-//     assert_eq!(yaml.trim(), expected_yaml.trim());
-// }
+    assert_eq!(result, expect);
+}
