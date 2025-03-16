@@ -9,13 +9,13 @@ mod test {
         Example2,
     }
 
-    #[derive(ToValue, FromValue, PartialEq, Debug, Default, Clone, ToJson, ToYaml)]
+    #[derive(ToValue, FromValue, PartialEq, Debug, Default, Clone, ToJson)]
     struct Inner {
         item_a: bool,
         tree: BTreeMap<String, String>,
     }
 
-    #[derive(ToValue, FromValue, PartialEq, Debug, Clone, ToJson, ToYaml)]
+    #[derive(ToValue, FromValue, PartialEq, Debug, Clone, ToJson)]
     struct Example<T>
     where
         T: PrimitiveType + FromValueBehavior<Item = T> + Clone + ToValueBehavior,

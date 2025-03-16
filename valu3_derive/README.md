@@ -90,8 +90,8 @@ fn main(){
 
 ```
 
-### ToJson, ToYaml, ToXml
-If your focus is only on using `Valu3` for conversion only, use the `ToJson`, `ToYaml` or `ToXml` macros.
+### ToJson
+If your focus is only on using `Valu3` for conversion only, use the `ToJson` macro.
 
 ```rust
 use valu3::prelude:*;

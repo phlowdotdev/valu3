@@ -398,18 +398,6 @@ pub trait ToJsonBehavior {
     fn to_json(&self) -> String;
 }
 
-/// A trait for converting types to YAML strings.
-pub trait ToYamlBehavior {
-    /// Converts a type into a YAML string.
-    fn to_yaml(&self) -> String;
-}
-
-/// A trait for converting types to XML strings.
-pub trait ToXmlBehavior {
-    /// Converts a type into an XML string.
-    fn to_xml(&self) -> String;
-}
-
 pub trait ValueKeyBehavior: Clone {
     fn to_value_key(&self) -> ValueKey;
 
