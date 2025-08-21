@@ -6,7 +6,7 @@ macro_rules! json {
     (null) => {
         $crate::value::Value::Null
     };
-    
+
     // Handle booleans
     (true) => {
         $crate::value::Value::from(true)
@@ -14,7 +14,37 @@ macro_rules! json {
     (false) => {
         $crate::value::Value::from(false)
     };
-    
+
+    // Handle empty object
+    ({}) => {{
+        use std::collections::HashMap;
+        use $crate::traits::ToValueBehavior;
+        HashMap::<String, $crate::value::Value>::new().to_value()
+    }};
+
+    // Handle object with key-value pairs
+    ({ $($key:tt : $value:expr),* $(,)? }) => {{
+        use std::collections::HashMap;
+        use $crate::traits::ToValueBehavior;
+        let mut map = HashMap::new();
+        $(
+            map.insert($key.to_string(), json!($value));
+        )*
+        map.to_value()
+    }};
+
+    // Handle empty array
+    ([]) => {{
+        use $crate::traits::ToValueBehavior;
+        Vec::<$crate::value::Value>::new().to_value()
+    }};
+
+    // Handle array with values
+    ([ $($value:expr),* $(,)? ]) => {{
+        use $crate::traits::ToValueBehavior;
+        vec![ $(json!($value)),* ].to_value()
+    }};
+
     // Handle any other expression
     ($val:expr) => {{
         use $crate::traits::ToValueBehavior;
@@ -28,39 +58,121 @@ mod test {
     use std::collections::HashMap;
 
     #[test]
-    fn test_json() {
-        // Test basic values
+    fn test_json_null() {
         let null = json!(null);
         assert_eq!(null, crate::value::Value::Null);
-        
+    }
+
+    #[test]
+    fn test_json_booleans() {
         let bool_true = json!(true);
         assert_eq!(bool_true, crate::value::Value::from(true));
-        
+
         let bool_false = json!(false);
         assert_eq!(bool_false, crate::value::Value::from(false));
-        
-        // Test expressions
+    }
+
+    #[test]
+    fn test_json_number() {
         let number = json!(42);
         assert_eq!(number, 42.to_value());
-        
+    }
+
+    #[test]
+    fn test_json_string() {
         let string = json!("hello");
         assert_eq!(string, "hello".to_value());
-        
+    }
+
+    #[test]
+    fn test_json_array() {
         let array = json!(vec![1, 2, 3]);
         assert_eq!(array, vec![1, 2, 3].to_value());
-        
-        // Test with variables
+    }
+
+    #[test]
+    fn test_json_variable() {
         let test_val = true;
         let from_var = json!(test_val);
         assert_eq!(from_var, test_val.to_value());
-        
-        // Test complex structure built with Rust syntax
+    }
+
+    #[test]
+    fn test_json_complex_structure() {
         let mut map = HashMap::new();
         map.insert("test".to_string(), true.to_value());
         map.insert("test2".to_string(), "ok".to_value());
         map.insert("test3".to_string(), vec![0, 1].to_value());
-        
+
         let complex = json!(map);
         assert_eq!(complex, map.to_value());
+    }
+
+    #[test]
+    fn test_json_declarative() {
+        let data = json!({
+            "name": "test",
+            "value": 42,
+            "active": true
+        });
+
+        let expected = {
+            let mut map = HashMap::new();
+            map.insert("name".to_string(), "test".to_value());
+            map.insert("value".to_string(), 42.to_value());
+            map.insert("active".to_string(), true.to_value());
+            map.to_value()
+        };
+
+        assert_eq!(data, expected);
+    }
+
+    #[test]
+    fn test_json_declarative_with_expressions() {
+        let active = true;
+        let value = "42";
+        let data = json!({
+            "name": "test",
+            "value": value.parse::<i32>().unwrap(),
+            "active": active
+        });
+
+        let expected = {
+            let mut map = HashMap::new();
+            map.insert("name".to_string(), "test".to_value());
+            map.insert("value".to_string(), 42.to_value());
+            map.insert("active".to_string(), true.to_value());
+            map.to_value()
+        };
+
+        assert_eq!(data, expected);
+    }
+
+    #[test]
+    fn test_json_array_declarative() {
+        let value = "42";
+        let data = json!([1, "hello", true, value.parse::<i32>().unwrap()]);
+
+        let expected = vec![
+            1.to_value(),
+            "hello".to_value(),
+            true.to_value(),
+            42.to_value(),
+        ]
+        .to_value();
+
+        assert_eq!(data, expected);
+    }
+
+    #[test]
+    fn test_json_empty_containers() {
+        let empty_obj = json!({});
+        let empty_arr = json!([]);
+
+        assert_eq!(
+            empty_obj,
+            HashMap::<String, crate::value::Value>::new().to_value()
+        );
+        assert_eq!(empty_arr, Vec::<crate::value::Value>::new().to_value());
     }
 }
