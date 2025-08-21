@@ -23,3 +23,11 @@ macrotest = "1.1.0"
 
 [lib]
 proc-macro = true
+
+[[test]]
+name = "derive_test"
+path = "tests/derive_test.rs"
+
+[[test]]
+name = "tests"
+path = "tests/tests.rs"

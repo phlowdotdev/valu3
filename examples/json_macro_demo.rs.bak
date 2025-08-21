@@ -1,0 +1,158 @@
+use valu3::prelude::*;
+
+fn main() {
+    println!("🚀 Valu3 - Enhanced json! macro demo");
+    println!("=====================================");
+
+    // Basic types
+    println!("\n📝 Basic Types:");
+    let null_val = json!(null);
+    let bool_true = json!(true);
+    let bool_false = json!(false);
+    let number = json!(42);
+    let float_num = json!(3.14159);
+    let text = json!("Hello, Valu3!");
+
+    println!("null: {}", null_val);
+    println!("boolean: {}", bool_true);
+    println!("boolean: {}", bool_false);
+    println!("integer: {}", number);
+    println!("float: {}", float_num);
+    println!("string: {}", text);
+
+    // Arrays
+    println!("\n📋 Arrays:");
+    let empty_array = json!([]);
+    let number_array = json!([1, 2, 3, 4, 5]);
+    let mixed_array = json!(["hello", 42, true, null]);
+    let nested_array = json!([[1, 2], [3, 4], [5, 6]]);
+
+    println!("empty array: {}", empty_array);
+    println!("numbers: {}", number_array);
+    println!("mixed types: {}", mixed_array);
+    println!("nested: {}", nested_array);
+
+    // Objects
+    println!("\n🗂️  Objects:");
+    let empty_obj = json!({});
+    let simple_obj = json!({
+        "name": "Valu3",
+        "version": "0.8.3",
+        "type": "library"
+    });
+
+    println!("empty object: {}", empty_obj);
+    println!("simple object: {}", simple_obj);
+
+    // Complex structures with variables
+    println!("\n🔧 Complex Structures with Variables:");
+    let app_name = "MyApp";
+    let version_major = 1;
+    let version_minor = 2;
+    let features = vec!["json", "serde", "parser"];
+    let is_stable = true;
+
+    let app_config = json!({
+        "application": {
+            "name": app_name,
+            "version": {
+                "major": version_major,
+                "minor": version_minor,
+                "full": format!("{}.{}", version_major, version_minor)
+            },
+            "features": features,
+            "metadata": {
+                "stable": is_stable,
+                "license": "Apache-2.0",
+                "author": "Philippe Assis"
+            }
+        },
+        "build": {
+            "timestamp": 1699123456,
+            "environment": "development",
+            "dependencies": [
+                {"name": "serde", "version": "1.0"},
+                {"name": "chrono", "version": "0.4"},
+                {"name": "pest", "version": "2.7"}
+            ]
+        }
+    });
+
+    println!("complex config: {}", app_config);
+
+    // Trailing commas support
+    println!("\n✨ Trailing Commas Support:");
+    let trailing_array = json!([
+        "first",
+        "second",
+        "third",  // <- trailing comma
+    ]);
+
+    let trailing_object = json!({
+        "key1": "value1",
+        "key2": "value2",
+        "key3": "value3",  // <- trailing comma
+    });
+
+    println!("array with trailing comma: {}", trailing_array);
+    println!("object with trailing comma: {}", trailing_object);
+
+    // Dynamic keys and computed values
+    println!("\n🧮 Dynamic Keys and Computed Values:");
+    let key_prefix = "dynamic";
+    let counter = 5;
+    
+    let dynamic_obj = json!({
+        "static_key": "static_value",
+        "computed_sum": 2 + 3,
+        "computed_product": counter * 10,
+        "boolean_logic": counter > 3,
+        "string_interpolation": format!("Counter is {}", counter)
+    });
+
+    println!("dynamic object: {}", dynamic_obj);
+
+    // Real-world API response example
+    println!("\n🌐 Real-world API Response Example:");
+    let user_id = 12345;
+    let username = "john_doe";
+    let posts = vec!["First post", "Second post", "Third post"];
+    let follower_count = 1337;
+
+    let api_response = json!({
+        "status": "success",
+        "data": {
+            "user": {
+                "id": user_id,
+                "username": username,
+                "profile": {
+                    "posts": posts,
+                    "stats": {
+                        "followers": follower_count,
+                        "following": 42,
+                        "posts_count": 156
+                    },
+                    "verified": true,
+                    "joined": "2023-01-15T10:30:00Z"
+                }
+            }
+        },
+        "meta": {
+            "timestamp": 1699123456789_i64,
+            "version": "v1.0",
+            "rate_limit": {
+                "remaining": 95,
+                "reset": null
+            }
+        }
+    });
+
+    println!("API response: {}", api_response);
+
+    // Converting to JSON string
+    println!("\n📤 JSON String Output:");
+    println!("{}", api_response.to_json(JsonMode::Indented));
+
+    println!("\n✅ All examples completed successfully!");
+    println!("The new json! macro supports the same syntax as serde_json::json! 🎉");
+}

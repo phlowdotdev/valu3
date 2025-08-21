@@ -1,7 +1,6 @@
 // tests/derive_tests.rs
 use std::collections::HashMap;
 use valu3::prelude::*;
-use valu3_derive::*;
 
 #[derive(ToValue, FromValue, ToJson)]
 struct User {
