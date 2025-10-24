@@ -21,6 +21,7 @@ Welcome to **Valu3** - the ultimate, flexible, and powerful library for manipula
 5. **Serde Integration**: Serialize and deserialize your data seamlessly with Valu3's out-of-the-box integration with the Serde library.
 6. **Native Struct Parsing & Validation**: Valu3 and Pest join forces to offer native parsing, conversion, and validation of data to structs, ensuring data integrity at every step.
 7. **Payload Interpretation & Transformation**: Valu3 interprets and transforms payload strings like a champ, handling JSON from HTTP request bodies and more.
+8. **Serde Converters**: Prepare to use Serde converters for enhanced data serialization and deserialization capabilities.
 
 ## 💡 Why Choose Valu3?
 
@@ -33,6 +34,48 @@ Join the Valu3 revolution and experience the future of data manipulation in Rust
 ## Examples :space_invader:
 
 Here are some examples of how to use the Valu3:
+
+## Serde converters (serde <-> `Value`)
+
+Valu3 now exposes zero-copy converters between Serde `Serialize`/`Deserialize` types and `Value`, implemented using Serde's `Serializer`/`Deserializer` traits (no textual intermediate like `serde_json`). Use these when you need to convert Rust structs/enums/collections directly to `Value` and back.
+
+Highlights
+- Direct conversion without text: avoids serializing to JSON and reparsing.
+- Full support for primitives, strings, arrays, maps/objects, datetimes, numbers and options.
+- Enum support: unit variants, newtype variants, tuple variants and struct variants are supported. Representation conventions:
+    - Unit variant: represented as a string with the variant name, e.g. `"MyVariant"`.
+    - Newtype / Tuple / Struct variant: represented as a single-key object whose key is the variant name and whose value holds the inner payload, e.g. `{"Variant": value}` or `{"TupleVariant": [1,2]}` or `{"StructVariant": {"a":1}}`.
+
+API
+- `valu3::serde_value::to_value<T: Serialize>(&T) -> Result<Value, Error>` – serialize a `T` directly into a `Value`.
+- `valu3::serde_value::from_value<T: DeserializeOwned>(&Value) -> Result<T, Error>` – deserialize a `Value` into `T`.
+
+Example
+```rust
+use valu3::prelude::*;
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
+enum E {
+        Unit,
+        Newtype(String),
+        Tuple(i32, i32),
+        Struct { a: i32, b: String },
+}
+
+let v = E::Struct { a: 1, b: "x".to_string() };
+let value = valu3::serde_value::to_value(&v).unwrap();
+// value will be { "Struct": { "a": 1, "b": "x" } }
+
+let back: E = valu3::serde_value::from_value(&value).unwrap();
+assert_eq!(v, back);
+```
+
+Notes & limitations
+- The converters prefer sensible numeric visitors (i64/u64/f64) when possible; extremely large integers are preserved using i128/u128 when necessary.
+- Byte sequences are not supported by the serializer (they produce an error).
+- Enum array-style representation (e.g. `["Variant", {...}]`) is not supported; file an issue if you need it.
+
 
 ```rust
 use valu3::prelude::*;
