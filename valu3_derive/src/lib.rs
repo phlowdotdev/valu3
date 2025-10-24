@@ -84,19 +84,27 @@ fn to_value_enum_impl(
     variants: syn::punctuated::Punctuated<Variant, syn::Token![,]>,
 ) -> proc_macro2::TokenStream {
     let (impl_generics, ty_generics, where_clause) = generics.split_for_impl();
-
-    let variant_transforms = variants.iter().map(|variant| {
+    // Ensure we only support unit variants for now. If a variant carries data,
+    // fail early with a clear message so the user knows the derive is not
+    // implemented for data-carrying variants yet.
+    let mut arms = Vec::new();
+    for variant in variants.iter() {
         let variant_name = &variant.ident;
-        quote! {
-            #name::#variant_name => Value::from(stringify!(#variant_name)),
+        match &variant.fields {
+            Fields::Unit => {
+                arms.push(quote! {
+                    #name::#variant_name => Value::from(stringify!(#variant_name)),
+                });
+            }
+            _ => panic!("ToValue cannot be derived for enums with data-carrying variants (tuple or struct variants)"),
         }
-    });
+    }
 
     quote! {
         impl #impl_generics ToValueBehavior for #name #ty_generics #where_clause {
             fn to_value(&self) -> Value {
                 match self {
-                    #(#variant_transforms)*
+                    #(#arms)*
                 }
             }
         }
@@ -170,11 +178,19 @@ pub fn from_value_derive(input: TokenStream) -> TokenStream {
         }
         Data::Enum(data_enum) => {
             let variants = data_enum.variants;
+
             let mut variant_names = Vec::new();
 
+            // Only support unit variants for now. If any variant has fields,
+            // fail early with a clear message to the user.
             for variant in variants.iter() {
-                let variant_name = &variant.ident;
-                variant_names.push(variant_name.clone());
+                match &variant.fields {
+                    Fields::Unit => {
+                        let variant_name = &variant.ident;
+                        variant_names.push(variant_name.clone());
+                    }
+                    _ => panic!("FromValue cannot be derived for enums with data-carrying variants (tuple or struct variants)"),
+                }
             }
 
             let expanded = quote! {
