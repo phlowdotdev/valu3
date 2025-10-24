@@ -1,3 +1,4 @@
 /target
 *.parquet
-.vscode*.expanded.rs
+.vscode
+*.expanded.rs
