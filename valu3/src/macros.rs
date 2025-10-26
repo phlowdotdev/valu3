@@ -1,4 +1,5 @@
 // Simple json! macro for basic JSON-like syntax
+// Simple json! macro for basic JSON-like syntax
 // Note: This is a simplified version and doesn't support all JSON features
 #[macro_export]
 macro_rules! json {
@@ -22,7 +23,18 @@ macro_rules! json {
         HashMap::<String, $crate::value::Value>::new().to_value()
     }};
 
-    // Handle object with key-value pairs
+    // Handle object with key-value pairs (values that are token-trees — e.g. nested objects/arrays)
+    ({ $($key:tt : $value:tt),* $(,)? }) => {{
+        use std::collections::HashMap;
+        use $crate::traits::ToValueBehavior;
+        let mut map = HashMap::new();
+        $(
+            map.insert($key.to_string(), json!($value));
+        )*
+        map.to_value()
+    }};
+
+    // Fallback: values that are expressions
     ({ $($key:tt : $value:expr),* $(,)? }) => {{
         use std::collections::HashMap;
         use $crate::traits::ToValueBehavior;
@@ -39,7 +51,13 @@ macro_rules! json {
         Vec::<$crate::value::Value>::new().to_value()
     }};
 
-    // Handle array with values
+    // Handle array with values (token-tree entries first, to allow nested arrays/objects)
+    ([ $($value:tt),* $(,)? ]) => {{
+        use $crate::traits::ToValueBehavior;
+        vec![ $(json!($value)),* ].to_value()
+    }};
+
+    // Fallback: array entries as expressions
     ([ $($value:expr),* $(,)? ]) => {{
         use $crate::traits::ToValueBehavior;
         vec![ $(json!($value)),* ].to_value()
@@ -174,5 +192,33 @@ mod test {
             HashMap::<String, crate::value::Value>::new().to_value()
         );
         assert_eq!(empty_arr, Vec::<crate::value::Value>::new().to_value());
+    }
+
+    #[test]
+    fn test_json_nested_structures() {
+        let data = json!({
+            "user": {
+                "id": 1,
+                "name": "Alice",
+                "roles": ["admin", "user"]
+            },
+            "active": true,
+            "score": 99.5
+        });
+
+        let mut user_map = HashMap::new();
+        user_map.insert("id".to_string(), 1.to_value());
+        user_map.insert("name".to_string(), "Alice".to_value());
+        user_map.insert(
+            "roles".to_string(),
+            vec!["admin".to_value(), "user".to_value()].to_value(),
+        );
+
+        let mut expected_map = HashMap::new();
+        expected_map.insert("user".to_string(), user_map.to_value());
+        expected_map.insert("active".to_string(), true.to_value());
+        expected_map.insert("score".to_string(), 99.5.to_value());
+
+        assert_eq!(data, expected_map.to_value());
     }
 }
