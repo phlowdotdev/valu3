@@ -24,13 +24,12 @@ rand = "0.9.2"
 serde_json = "1.0.134"
 
 [features]
-default = ["parser", "derive", "serde", "bin"]
+default = ["parser", "derive", "serde"]
 parser = ["json"]
 json = []
 serde = ["dep:serde"]
 cstring = []
 derive = ["dep:valu3-derive"]
-bin = ["dep:bincode", "serde"]
 
 [lib]
 doctest = false
