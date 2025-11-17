@@ -95,9 +95,11 @@ impl Value {
                     } else {
                         let before = range.start - 1;
 
-                        if list.get(before).unwrap().ne(r#"\"#) {
-                            result.insert(range.start + add_posi, r#"\"#.to_string());
-                            add_posi += 1;
+                        if let Some(prev_char) = list.get(before) {
+                            if prev_char.ne(r#"\"#) {
+                                result.insert(range.start + add_posi, r#"\"#.to_string());
+                                add_posi += 1;
+                            }
                         }
                     }
                 }
