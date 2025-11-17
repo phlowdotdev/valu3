@@ -532,7 +532,7 @@ checksum = "22049a19f4a68748a168c0fc439f9516686aa045927ff767eca0a85101fb6e73"
 
 [[package]]
 name = "valu3"
-version = "0.9.2"
+version = "0.9.3"
 dependencies = [
  "chrono",
  "pest",
@@ -546,7 +546,7 @@ dependencies = [
 
 [[package]]
 name = "valu3-derive"
-version = "0.9.2"
+version = "0.9.3"
 dependencies = [
  "macrotest",
  "proc-macro2",
