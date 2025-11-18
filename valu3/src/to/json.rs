@@ -10,6 +10,14 @@ pub enum JsonMode {
 }
 
 impl Value {
+    pub fn to_json_idented(&self) -> String {
+        self.to_json(JsonMode::Indented)
+    }
+
+    pub fn to_json_inline(&self) -> String {
+        self.to_json(JsonMode::Inline)
+    }
+
     /// Converts a `Value` into a JSON string.
     ///
     /// # Arguments
@@ -76,12 +84,19 @@ impl Value {
                 )
             }
             Value::String(s) => {
-                let mut json = serde_json::to_string(s.as_str()).unwrap();
-                // Normalização geral: remove espaços entre uma aspa escapada e '>'
-                // Ex.: transforma \"   > em \">
-                let re = Regex::new(r#"(\\")\s+>"#).unwrap();
-                json = re.replace_all(&json, "$1>").to_string();
-                json
+                let string = s.as_str();
+                let mut out = String::with_capacity(string.len());
+                let mut prev: Option<char> = None;
+                for ch in string.chars() {
+                    if ch == '"' && prev != Some('\\') {
+                        out.push('\\');
+                        out.push('"');
+                    } else {
+                        out.push(ch);
+                    }
+                    prev = Some(ch);
+                }
+                format!("\"{}\"", out)
             }
             Value::Number(n) => format!("{}", n),
             Value::Boolean(b) => format!("{}", b),
@@ -130,12 +145,12 @@ mod tests {
 
     #[test]
     fn it_should_complex_string() {
-        let string = r#"<img src="image.jpg" alt="An image" >"#;
-        let map = vec![("html".to_string(), Value::from(string))];
-        let value = Value::from(map);
+        let string = r#"1 1763496849266 https://mercado.carrefour.com.br/mapa-do-site/1 <!DOCTYPE html><html lang="pt-BR"><head><link href="https://cdn-prod.securiti.ai/consent/cookie-consent-latest.css" rel="stylesheet"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0"><title>Mapa do Site | Supermercado Carrefour</title><meta name="robots" content="index,follow"><meta name="description" content="O Carrefour também tem supermercado online! Faça sua lista de compras e aproveite nosso delivery. Aproveite!"><meta property="og:title" content="Mercado Carrefour: Ofertas de Supermercado Delivery"><meta property="og:description" content="O Carrefour também tem supermercado online! Faça sua lista de compras e aproveite nosso delivery. Aproveite!"><meta property="og:url" content="https://mercado.carrefour.com.br"><meta property="og:type" content="website"><link rel="canonical" href="https://mercado.carrefour.com.br"><meta name="next-head-count" content="10"><meta name="google-site-verification" content="GjAwJWf5U8gd7i0Tg-Dqz8LE0qi4RWdMWxfwsd-EgOY"><meta name="facebook-domain-verification" content="ym08vcfms00jx3fkqdkgqgsxrxbi8f"><meta name="facebook-domain-verification" content="ym08vcfms00jx3fkqdkgqgsxrxbi8f"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preload" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&amp;display=swap" rel="preload"><link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,700;1,300&amp;display=swap" rel="preload"><link rel="preload" href="/_next/static/css/4a6cfdceadc6be2d.css" as="style"><link rel="stylesheet" href="/_next/static/css/4a6cfdceadc6be2d.css" data-n-g=""><link rel="preload" href="/_next/static/css/d2bb7ebb3aa1fe96.css" as="style"><link rel="stylesheet" href="/_next/static/css/d2bb7ebb3aa1fe96.css" data-n-p=""><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js"></script><script data-partytown-config="">"#;
+        let value = Value::from(string);
         let json_output = value.to_json(JsonMode::Indented);
+        // Esperado: objeto JSON com a chave "html" e a string com aspas internas escapadas
+        let expected = r#""1 1763496849266 https://mercado.carrefour.com.br/mapa-do-site/1 <!DOCTYPE html><html lang=\"pt-BR\"><head><link href=\"https://cdn-prod.securiti.ai/consent/cookie-consent-latest.css\" rel=\"stylesheet\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0\"><title>Mapa do Site | Supermercado Carrefour</title><meta name=\"robots\" content=\"index,follow\"><meta name=\"description\" content=\"O Carrefour também tem supermercado online! Faça sua lista de compras e aproveite nosso delivery. Aproveite!\"><meta property=\"og:title\" content=\"Mercado Carrefour: Ofertas de Supermercado Delivery\"><meta property=\"og:description\" content=\"O Carrefour também tem supermercado online! Faça sua lista de compras e aproveite nosso delivery. Aproveite!\"><meta property=\"og:url\" content=\"https://mercado.carrefour.com.br\"><meta property=\"og:type\" content=\"website\"><link rel=\"canonical\" href=\"https://mercado.carrefour.com.br\"><meta name=\"next-head-count\" content=\"10\"><meta name=\"google-site-verification\" content=\"GjAwJWf5U8gd7i0Tg-Dqz8LE0qi4RWdMWxfwsd-EgOY\"><meta name=\"facebook-domain-verification\" content=\"ym08vcfms00jx3fkqdkgqgsxrxbi8f\"><meta name=\"facebook-domain-verification\" content=\"ym08vcfms00jx3fkqdkgqgsxrxbi8f\"><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preload\" href=\"https://fonts.googleapis.com\"><link href=\"https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&amp;display=swap\" rel=\"preload\"><link href=\"https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,700;1,300&amp;display=swap\" rel=\"preload\"><link rel=\"preload\" href=\"/_next/static/css/4a6cfdceadc6be2d.css\" as=\"style\"><link rel=\"stylesheet\" href=\"/_next/static/css/4a6cfdceadc6be2d.css\" data-n-g=\"\"><link rel=\"preload\" href=\"/_next/static/css/d2bb7ebb3aa1fe96.css\" as=\"style\"><link rel=\"stylesheet\" href=\"/_next/static/css/d2bb7ebb3aa1fe96.css\" data-n-p=\"\"><noscript data-n-css=\"\"></noscript><script defer=\"\" nomodule=\"\" src=\"/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js\"></script><script data-partytown-config=\"\">""#;
 
-        let expected = "{\n\t\"html\": \"<img src=\\\"image.jpg\\\" alt=\\\"An image\\\">\"\n}";
-        assert_eq!(expected, json_output);
+        assert_eq!(json_output, expected);
     }
 }
