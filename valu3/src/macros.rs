@@ -72,7 +72,7 @@ macro_rules! json {
 
 #[cfg(test)]
 mod test {
-    use crate::traits::ToValueBehavior;
+    use crate::{prelude::JsonMode, traits::ToValueBehavior};
     use std::collections::HashMap;
 
     #[test]
@@ -220,5 +220,30 @@ mod test {
         expected_map.insert("score".to_string(), 99.5.to_value());
 
         assert_eq!(data, expected_map.to_value());
+    }
+
+    #[test]
+    fn test_recursive_json() {
+        let inner = json!({
+                "level2": r#"<img src="level2.png" />"#
+        });
+        let data = json!({
+            "level1": inner
+        });
+
+        let mut level2_map = HashMap::new();
+        level2_map.insert(
+            "level2".to_string(),
+            r#"<img src="level2.png" />"#.to_value(),
+        );
+
+        let mut expected_map = HashMap::new();
+        expected_map.insert("level1".to_string(), level2_map.to_value());
+        assert_eq!(data, expected_map.to_value());
+
+        let string_json = data.to_json(JsonMode::Inline);
+        let expected_json = r#"{"level1": {"level2": "<img src=\"level2.png\" />"}}"#;
+
+        assert_eq!(string_json, expected_json);
     }
 }

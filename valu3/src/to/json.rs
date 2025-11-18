@@ -76,35 +76,12 @@ impl Value {
                 )
             }
             Value::String(s) => {
-                let string = s.as_str();
-                let re = Regex::new(r#"""#).unwrap();
-                let list = string
-                    .chars()
-                    .into_iter()
-                    .map(|c| c.to_string())
-                    .collect::<Vec<_>>();
-                let mut result = list.clone();
-                let mut add_posi = 0;
-
-                for item in re.captures_iter(string) {
-                    let range = item.get(0).unwrap().range();
-
-                    if range.start.eq(&0) {
-                        result.insert(range.start + add_posi, r#"\"#.to_string());
-                        add_posi += 1;
-                    } else {
-                        let before = range.start - 1;
-
-                        if let Some(prev_char) = list.get(before) {
-                            if prev_char.ne(r#"\"#) {
-                                result.insert(range.start + add_posi, r#"\"#.to_string());
-                                add_posi += 1;
-                            }
-                        }
-                    }
-                }
-
-                format!("\"{}\"", result.join(""))
+                let mut json = serde_json::to_string(s.as_str()).unwrap();
+                // Normalização geral: remove espaços entre uma aspa escapada e '>'
+                // Ex.: transforma \"   > em \">
+                let re = Regex::new(r#"(\\")\s+>"#).unwrap();
+                json = re.replace_all(&json, "$1>").to_string();
+                json
             }
             Value::Number(n) => format!("{}", n),
             Value::Boolean(b) => format!("{}", b),
@@ -149,5 +126,16 @@ mod tests {
             "{\n\t\"is_active\": true\n}",
             value_boolean.to_json(JsonMode::Indented)
         )
+    }
+
+    #[test]
+    fn it_should_complex_string() {
+        let string = r#"<img src="image.jpg" alt="An image" >"#;
+        let map = vec![("html".to_string(), Value::from(string))];
+        let value = Value::from(map);
+        let json_output = value.to_json(JsonMode::Indented);
+
+        let expected = "{\n\t\"html\": \"<img src=\\\"image.jpg\\\" alt=\\\"An image\\\">\"\n}";
+        assert_eq!(expected, json_output);
     }
 }
