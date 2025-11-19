@@ -242,7 +242,7 @@ mod test {
         assert_eq!(data, expected_map.to_value());
 
         let string_json = data.to_json(JsonMode::Inline);
-        let expected_json = r#"{"level1": {"level2": "<img src=\"level2.png\" />"}}"#;
+        let expected_json = r#"{"level1":{"level2":"<img src=\"level2.png\" />"}}"#;
 
         assert_eq!(string_json, expected_json);
     }
